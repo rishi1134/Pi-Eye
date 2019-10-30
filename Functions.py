@@ -18,6 +18,7 @@ def isIn(p,boxes):
                 return False,0,[0,0,0,0]
             c+=1
 
+
 def closest_colour(requested_colour):
     min_colours = {}
     for key, name in webcolors.css3_hex_to_names.items():
@@ -45,3 +46,12 @@ def play_sounds(queue):
             continue
         os.remove(sound)
         #print("deleted")
+
+def CourtColorExtractor(cropped_img):
+    color = ('b','g','r')
+    c=[]
+    for i,col in enumerate(color):
+        histr = cv2.calcHist([cropped_img],[i],None,[256],[0,256])
+        i,j=np.where(histr==np.amax(histr))
+        c.append(int(i[0]))
+    return c

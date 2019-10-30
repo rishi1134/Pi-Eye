@@ -1,3 +1,4 @@
+print("Starting Min-Mode.")
 from File_Importer import *
 from StartUpProcesses import *
 from Functions import *
@@ -48,7 +49,7 @@ GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 #GPIO.add_event_detect(23,GPIO.RISING,cb, bouncetime=200)
 GPIO.add_event_detect(23, GPIO.RISING, callback=my_callback, bouncetime=500)
 print("Starting Power Saving Mode.")
-from objinit import *
+from objinitsaving import *
 for frame in camera.capture_continuous(rawCapture,format="bgr",use_video_port=True):
     frame1=np.copy(frame.array)
     if GPIO.event_detected(23):
@@ -69,8 +70,9 @@ for frame in camera.capture_continuous(rawCapture,format="bgr",use_video_port=Tr
                 box=boxes[0][c].astype(np.float64).tolist()
                 crop=frame1[int(240*box[0]):int(240*box[2]),int(320*box[1]):int(320*box[3])]
                 cv2.imwrite(class_name+" .jpg",crop)
-                h,w,_=crop.shape
-                b,g,r=crop[int(h/2),int(w/2)]
+                #h,w,_=crop.shape
+                #b,g,r=crop[int(h/2),int(w/2)]
+                b,g,r=CourtColorExtractor(crop)
                 requested_colour = (r, g, b)
                 actual_name, closest_name = get_colour_name(requested_colour)
                 print(closest_name)
